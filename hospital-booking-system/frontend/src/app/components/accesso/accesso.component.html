@@ -1,0 +1,54 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Accesso</h3>
+        </div>
+        <div class="card-body">
+          <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                name="email"
+                [(ngModel)]="credentials.email"
+                required
+                #email="ngModel"
+                placeholder="Inserisci la tua email">
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="password" 
+                name="password"
+                [(ngModel)]="credentials.password"
+                required
+                #password="ngModel"
+                placeholder="Inserisci la tua password">
+            </div>
+
+            <button 
+              type="submit" 
+              class="btn btn-primary w-100"
+              [disabled]="loginForm.invalid">
+              Accedi
+            </button>
+          </form>
+
+          <hr class="my-4">
+
+          <p class="text-center mb-0">
+            Non hai un account? 
+            <a routerLink="/registrazione">Registrati</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

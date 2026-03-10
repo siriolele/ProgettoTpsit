@@ -1,0 +1,118 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Nuova Prenotazione</h3>
+        </div>
+        <div class="card-body">
+          <form #prenotazioneForm="ngForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="reparto" class="form-label">Reparto *</label>
+                <select 
+                  class="form-select" 
+                  id="reparto" 
+                  name="reparto"
+                  [(ngModel)]="prenotazione.reparto"
+                  required
+                  #reparto="ngModel"
+                  (change)="onRepartoChange()">
+                  <option value="">Seleziona un reparto</option>
+                  <option value="Cardiologia">Cardiologia</option>
+                  <option value="Oculistica">Oculistica</option>
+                  <option value="Ortopedia">Ortopedia</option>
+                  <option value="Pediatria">Pediatria</option>
+                  <option value="Chirurgia">Chirurgia</option>
+                </select>
+                <div *ngIf="reparto.invalid && reparto.touched" class="text-danger small mt-1">
+                  Seleziona un reparto
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="medico" class="form-label">Medico *</label>
+                <select 
+                  class="form-select" 
+                  id="medico" 
+                  name="medico"
+                  [(ngModel)]="prenotazione.medico"
+                  required
+                  #medico="ngModel">
+                  <option value="">Seleziona un medico</option>
+                  <option *ngFor="let m of medici" [value]="m">{{ m }}</option>
+                </select>
+                <div *ngIf="medico.invalid && medico.touched" class="text-danger small mt-1">
+                  Seleziona un medico
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="data" class="form-label">Data *</label>
+                <input 
+                  type="date" 
+                  class="form-control" 
+                  id="data" 
+                  name="data"
+                  [(ngModel)]="prenotazione.data"
+                  required
+                  [min]="dataMinima"
+                  #data="ngModel"
+                  (change)="onDataChange()">
+                <div *ngIf="data.invalid && data.touched" class="text-danger small mt-1">
+                  Seleziona una data
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="ora" class="form-label">Ora *</label>
+                <select 
+                  class="form-select" 
+                  id="ora" 
+                  name="ora"
+                  [(ngModel)]="prenotazione.ora"
+                  required
+                  #ora="ngModel">
+                  <option value="">Seleziona un orario</option>
+                  <option *ngFor="let fascia of fasceDisponibili" [value]="fascia">{{ fascia }}</option>
+                </select>
+                <div *ngIf="ora.invalid && ora.touched" class="text-danger small mt-1">
+                  Seleziona un orario
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="note" class="form-label">Note aggiuntive</label>
+              <textarea 
+                class="form-control" 
+                id="note" 
+                name="note"
+                [(ngModel)]="prenotazione.note"
+                rows="3"
+                placeholder="Eventuali note per la visita"></textarea>
+            </div>
+
+            <div class="alert alert-info" *ngIf="fasceDisponibili.length === 0 && prenotazione.data">
+              <i class="bi bi-info-circle"></i> 
+              Non ci sono slot disponibili per questa data. Seleziona un'altra data.
+            </div>
+
+            <hr class="my-4">
+
+            <div class="d-grid gap-2">
+              <button 
+                type="submit" 
+                class="btn btn-primary btn-lg"
+                [disabled]="prenotazioneForm.invalid || fasceDisponibili.length === 0">
+                Procedi al Pagamento
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,66 @@
+<div class="container mt-4">
+  <div class="card shadow">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h3 class="mb-0">Le Mie Prenotazioni</h3>
+      <a routerLink="/prenota" class="btn btn-light btn-sm">
+        <i class="bi bi-plus-circle"></i> Nuova Prenotazione
+      </a>
+    </div>
+    <div class="card-body">
+      <div *ngIf="prenotazioni.length === 0" class="text-center py-4">
+        <p class="text-muted">Non hai ancora effettuato prenotazioni.</p>
+        <a routerLink="/prenota" class="btn btn-primary">Prenota ora</a>
+      </div>
+
+      <div class="table-responsive" *ngIf="prenotazioni.length > 0">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Ora</th>
+              <th>Reparto</th>
+              <th>Medico</th>
+              <th>Stato</th>
+              <th>Pagamento</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of prenotazioni">
+              <td>{{ p.data | date:'dd/MM/yyyy' }}</td>
+              <td>{{ p.ora }}</td>
+              <td>{{ p.reparto }}</td>
+              <td>{{ p.medico }}</td>
+              <td>
+                <span [class]="getClasseStato(p.stato)">
+                  {{ getStatoTesto(p.stato) }}
+                </span>
+              </td>
+              <td>
+                <span [class]="getClassePagamento(p.statoPagamento)">
+                  {{ getPagamentoTesto(p.statoPagamento) }}
+                </span>
+              </td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <button 
+                    *ngIf="p.stato !== 'cancellata' && p.statoPagamento !== 'pagato'"
+                    class="btn btn-success" 
+                    (click)="pagaPrenotazione(p._id)">
+                    <i class="bi bi-credit-card"></i> Paga
+                  </button>
+                  <button 
+                    *ngIf="p.stato !== 'cancellata'"
+                    class="btn btn-danger" 
+                    (click)="cancellaPrenotazione(p._id)">
+                    <i class="bi bi-x-circle"></i> Cancella
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

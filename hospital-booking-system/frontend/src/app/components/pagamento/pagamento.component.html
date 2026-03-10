@@ -1,0 +1,132 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <!-- Pagamento completato -->
+      <div class="card shadow text-center" *ngIf="pagamentoCompletato">
+        <div class="card-body p-5">
+          <div class="mb-4">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+          </div>
+          <h2 class="text-success mb-3">Pagamento Completato!</h2>
+          <p class="lead mb-4">La tua prenotazione è stata confermata.</p>
+          <p class="mb-4">Riceverai una email di conferma con i dettagli.</p>
+          <button class="btn btn-primary" (click)="tornaAllePrenotazioni()">
+            <i class="bi bi-list-check"></i> Vedi le mie prenotazioni
+          </button>
+        </div>
+      </div>
+
+      <!-- Form di pagamento -->
+      <div class="card shadow" *ngIf="!pagamentoCompletato && prenotazione">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Simulazione Pagamento</h4>
+        </div>
+        <div class="card-body">
+          <!-- Riepilogo prenotazione -->
+          <div class="alert alert-info">
+            <h5 class="alert-heading">📋 Riepilogo Prenotazione</h5>
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Reparto:</strong> {{ prenotazione.reparto }}</p>
+                <p><strong>Medico:</strong> {{ prenotazione.medico }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Data:</strong> {{ prenotazione.data | date:'dd/MM/yyyy' }}</p>
+                <p><strong>Ora:</strong> {{ prenotazione.ora }}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="h5 mb-0">Totale da pagare:</span>
+              <span class="h4 text-primary mb-0">€ {{ getImporto().toFixed(2) }}</span>
+            </div>
+          </div>
+
+          <!-- Metodo di pagamento -->
+          <div class="mb-4">
+            <label class="form-label fw-bold">Metodo di pagamento</label>
+            <div class="btn-group w-100" role="group">
+              <input type="radio" class="btn-check" name="metodo" id="carta" value="carta" [(ngModel)]="metodoPagamento" checked>
+              <label class="btn btn-outline-primary" for="carta">
+                <i class="bi bi-credit-card"></i> Carta di Credito
+              </label>
+              
+              <input type="radio" class="btn-check" name="metodo" id="contanti" value="contanti" [(ngModel)]="metodoPagamento">
+              <label class="btn btn-outline-primary" for="contanti">
+                <i class="bi bi-cash"></i> Contanti
+              </label>
+              
+              <input type="radio" class="btn-check" name="metodo" id="bonifico" value="bonifico" [(ngModel)]="metodoPagamento">
+              <label class="btn btn-outline-primary" for="bonifico">
+                <i class="bi bi-bank"></i> Bonifico
+              </label>
+            </div>
+          </div>
+
+          <!-- Dati carta (solo se metodo = carta) -->
+          <div *ngIf="metodoPagamento === 'carta'" class="mb-4 p-3 border rounded">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="mb-0">💳 Dati della carta</h5>
+              <button class="btn btn-sm btn-outline-secondary" (click)="compilaDatiTest()">
+                <i class="bi bi-magic"></i> Dati di test
+              </button>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Numero Carta</label>
+              <input type="text" class="form-control" [(ngModel)]="carta.numero" placeholder="4111 1111 1111 1111">
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Intestatario</label>
+              <input type="text" class="form-control" [(ngModel)]="carta.intestatario" placeholder="Mario Rossi">
+            </div>
+            
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label">Scadenza</label>
+                <input type="text" class="form-control" [(ngModel)]="carta.scadenza" placeholder="MM/AA">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label">CVV</label>
+                <input type="text" class="form-control" [(ngModel)]="carta.cvv" placeholder="123">
+              </div>
+            </div>
+            
+            <div class="alert alert-warning small">
+              <i class="bi bi-info-circle"></i> 
+              Questa è una simulazione. Usa dati fittizi per testare.
+            </div>
+          </div>
+
+          <!-- Messaggio per altri metodi -->
+          <div *ngIf="metodoPagamento !== 'carta'" class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            Hai scelto pagamento in {{ metodoPagamento === 'contanti' ? 'contanti' : 'bonifico' }}.
+            Questa è una simulazione. Clicca "Paga" per completare.
+          </div>
+
+          <!-- Pulsanti -->
+          <div class="d-grid gap-2">
+            <button 
+              class="btn btn-primary btn-lg" 
+              (click)="processaPagamento()"
+              [disabled]="caricamento">
+              <span *ngIf="!caricamento">
+                <i class="bi bi-lock"></i> Paga € {{ getImporto().toFixed(2) }}
+              </span>
+              <span *ngIf="caricamento">
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Elaborazione pagamento...
+              </span>
+            </button>
+            
+            <button class="btn btn-outline-secondary" (click)="tornaAllePrenotazioni()">
+              <i class="bi bi-arrow-left"></i> Annulla e torna indietro
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
